@@ -20,6 +20,16 @@ services:
             MONGO_INITDB_DATABASE: users
         ports:
             - 27018:27017
+    
+    mongodb-users:
+        image: mongo:4.2.7
+        container_name: user-database
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: administrator
+            MONGO_INITDB_ROOT_PASSWORD: admin
+            MONGO_INITDB_DATABASE: stores
+        ports:
+            - 27019:27017
             
     monitoring:
         image: "prom/prometheus"
