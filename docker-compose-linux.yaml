@@ -2,7 +2,7 @@ version: "3.7"
 services:
     mongodb-products:
         image: mongo:4.2.7
-        container_name: product-database
+        container_name: products-database
         environment:
             MONGO_INITDB_ROOT_USERNAME: administrator
             MONGO_INITDB_ROOT_PASSWORD: admin
@@ -13,7 +13,7 @@ services:
         #     - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     mongodb-users:
         image: mongo:4.2.7
-        container_name: user-database
+        container_name: users-database
         environment:
             MONGO_INITDB_ROOT_USERNAME: administrator
             MONGO_INITDB_ROOT_PASSWORD: admin
@@ -21,9 +21,9 @@ services:
         ports:
             - 27018:27017
     
-    mongodb-users:
+    mongodb-stores:
         image: mongo:4.2.7
-        container_name: user-database
+        container_name: stores-database
         environment:
             MONGO_INITDB_ROOT_USERNAME: administrator
             MONGO_INITDB_ROOT_PASSWORD: admin
@@ -40,9 +40,19 @@ services:
         volumes:
           - ./monitoring/prometheus-linux.yml:/etc/prometheus/prometheus.yml
           
-    postgres:
+    postgres-stock:
         image: postgres:12.3
-        container_name: postgres
+        container_name: postgres-stock
+        environment:
+            POSTGRES_DB: stock
+            POSTGRES_USER: admin
+            POSTGRES_PASSWORD: admin
+        ports:
+            - 5433:5432
+          
+    postgres-keycloak:
+        image: postgres:12.3
+        container_name: postgres-keycloak
         environment:
             POSTGRES_DB: keycloak
             POSTGRES_USER: keycloak
@@ -63,7 +73,7 @@ services:
         ports:
             - 8180:8080
         depends_on:
-            - postgres
+            - postgres-keycloak
 
     zookeeper:
         image: strimzi/kafka:0.11.3-kafka-2.1.0
